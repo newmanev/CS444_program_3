@@ -8,10 +8,12 @@
 #include <fcntl.h>
 #include <pwd.h>
 #include <grp.h>
+#include <limits.h>
+#include <string.h>
 
 void print_info (struct stat, char);
 void permissions(struct stat, char);
-void link_path(void);
+void link_path(struct stat, char *);
 
 void print_info (struct stat sb, char type) {
 
@@ -55,10 +57,33 @@ void permissions(struct stat fileStat, char type) {
     return;
 }
 
-void link_path (void) {
+void link_path (struct stat sb, char *file) {
 
+    char *buf;
+    ssize_t nbytes, bufsiz;
 
+    bufsiz = sb.st_size + 1;
 
+    if (sb.st_size == 0)
+        bufsiz = PATH_MAX;
+
+    buf = malloc(bufsiz);
+    if (buf == NULL) {
+        perror("malloc");
+        exit(EXIT_FAILURE);
+    }
+
+    nbytes = readlink(file, buf, bufsiz);
+    if (nbytes == -1 || strcmp(buf, "JUNK") == 0) {
+        printf(" - with dangling destination\n");
+        free(buf);
+        return;
+    }
+
+    printf(" -> %.*s\n", (int) nbytes, buf);
+
+    free(buf);
+    return;
 }
 
 int
@@ -97,7 +122,8 @@ main(int argc, char *argv[])
         print_info(sb, 'p');
         break;
     case S_IFLNK:  
-        printf("Symbolic link\n");
+        printf("Symbolic link");
+        link_path(sb, argv[1]);
         print_info(sb, 'l');
         break;
     case S_IFREG:  
