@@ -41,6 +41,8 @@ void print_info (struct stat sb, char type) {
     return;
 }
 
+// Code provided by askovpen from StackOverflow
+// https://stackoverflow.com/questions/10323060/printing-file-permissions-like-ls-l-using-stat2-in-c 
 void permissions(struct stat fileStat, char type) {
 
     printf("%c", type);
@@ -57,6 +59,8 @@ void permissions(struct stat fileStat, char type) {
     return;
 }
 
+
+// Code provided by 'man 2 readlink' example
 void link_path (struct stat sb, char *file) {
 
     char *buf;
