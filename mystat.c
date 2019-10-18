@@ -35,9 +35,9 @@ void print_info (struct stat sb, char type) {
     printf("  File size:                %lld bytes\n",(long long) sb.st_size);
     printf("  Blocks allocated:         %lld\n",      (long long) sb.st_blocks);
 
-    printf("Last status change:         %s\n",  ctime);
-    printf("Last file access:           %s\n",  atime);
-    printf("Last file modification:     %s\n",  mtime);
+    printf("  Last status change:       %s\n",  ctime);
+    printf("  Last file access:         %s\n",  atime);
+    printf("  Last file modification:   %s\n",  mtime);
     return;
 }
 
